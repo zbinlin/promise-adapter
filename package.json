@@ -1,6 +1,6 @@
 {
   "name": "promise-adapter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert node-style callback to promise",
   "main": "index.js",
   "scripts": {
