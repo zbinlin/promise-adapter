@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert");
-var fs = require("fs");
+var EventEmitter = require("events");
 
 var promising = require("../");
 
@@ -64,6 +64,19 @@ describe("promise-adapter", function () {
             pTest().then(function (val) {
                 done();
             }, done);
+        });
+        it("should caught when emit error event", function (done) {
+            function test(cb) {
+                var evt = new EventEmitter;
+                process.nextTick(function () {
+                    evt.emit("error", new Error);
+                });
+                return evt;
+            };
+            var pTest = promising(test);
+            pTest().then(function () {}, function () {
+                done();
+            });
         });
     });
     

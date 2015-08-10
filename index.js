@@ -39,19 +39,37 @@ module.exports = function _promising(func, thisArg, isSync) {
             var args = [].slice.call(arguments);
             var executor = (function _(func, args, isSync) {
                 return function _executor(resolve, reject) {
+                    var rst;
                     if (isSync) {
-                        resolve([func.apply(undefined, args)]);
+                        rst = func.apply(undefined, args);
+                        resolve([rst]);
                     } else {
-                        func.apply(undefined, args.concat(asyncCallback));
+                        rst = func.apply(undefined, args.concat(asyncCallback));
+                        addListenerFor(rst);
                     }
                     function asyncCallback(err) {
                         var args = [].slice.call(arguments);
+                        removeListenerFrom(rst);
                         if (err instanceof Error) {
                             return reject(err);
                         } else if (err === null) {
                             args.shift();
                         }
                         return resolve(args);
+                    }
+                    function onError(err) {
+                        removeListenerFrom(this);
+                        reject(err);
+                    }
+                    function addListenerFor(rst) {
+                        if (rst && typeof rst === "object"
+                                && rst.addListener && rst.removeListener)
+                            rst.addListener("error", onError);
+                    }
+                    function removeListenerFrom(rst) {
+                        if (rst && typeof rst === "object"
+                                && rst.removeListener)
+                            rst.removeListener("error", onError);
                     }
                 };
             })(func, args, isSync);
