@@ -1,0 +1,28 @@
+{
+  "name": "promise-adapter",
+  "version": "1.0.0",
+  "description": "Convert node-style callback to promise",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/index.js",
+    "cover": "istanbul cover _mocha -- test/index.js -R spec"
+  },
+  "keywords": [
+    "async",
+    "callback",
+    "promise"
+  ],
+  "author": "zbinlin",
+  "license": "MIT",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zbinlin/promise-adapter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zbinlin/promise-adapter/issues"
+  },
+  "homepage": "https://github.com/zbinlin/promise-adapter#readme"
+}
