@@ -42,7 +42,7 @@ module.exports = function _promising(func, thisArg, isSync) {
                     var rst;
                     if (isSync) {
                         rst = func.apply(undefined, args);
-                        resolve([rst]);
+                        resolve(rst);
                     } else {
                         rst = func.apply(undefined, args.concat(asyncCallback));
                         addListenerFor(rst);
@@ -52,10 +52,13 @@ module.exports = function _promising(func, thisArg, isSync) {
                         removeListenerFrom(rst);
                         if (err instanceof Error) {
                             return reject(err);
-                        } else if (err === null) {
+                        } else if (err === null || err === undefined && args.length > 1) {
                             args.shift();
                         }
-                        return resolve(args);
+                        if (args.length > 1) {
+                            args = [args];
+                        }
+                        return resolve.apply(undefined, args);
                     }
                     function onError(err) {
                         removeListenerFrom(this);

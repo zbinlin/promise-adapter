@@ -32,7 +32,19 @@ describe("promise-adapter", function () {
             };
             var pTest = promising(test);
             pTest().then(function (val) {
-                assert.strictEqual(val[0], 1);
+                assert.strictEqual(val, 1);
+                done();
+            }).catch(done);
+        });
+        it("should returns more than one value", function (done) {
+            var test = function test(cb) {
+                process.nextTick(function () {
+                    cb(1, 2);
+                });
+            };
+            var pTest = promising(test);
+            pTest().then(function (val) {
+                assert.strictEqual(val.length, 2);
                 done();
             }).catch(done);
         });
@@ -79,7 +91,7 @@ describe("promise-adapter", function () {
             });
         });
     });
-    
+
     describe("sync function", function () {
         it("should catch throw error", function (done) {
             var test = function test(cb) {
@@ -97,9 +109,9 @@ describe("promise-adapter", function () {
             };
             var pTest = promising(test, true);
             pTest().then(function (val) {
-                assert.strictEqual(val[0], 1);
+                assert.strictEqual(val, 1);
                 done();
-            }, done);
+            }).catch(done);
         });
         it("should be returns a value", function (done) {
             var test = function () {
@@ -107,9 +119,19 @@ describe("promise-adapter", function () {
             };
             var pTest = promising(test, null, true);
             pTest().then(function (val) {
-                assert.strictEqual(val[0], 1);
+                assert.strictEqual(val, 1);
                 done();
-            }, done);
+            }).catch(done);
+        });
+        it("should be returns more than one value", function (done) {
+            var test = function () {
+                return [1, 2];
+            };
+            var pTest = promising(test, null, true);
+            pTest().then(function (val) {
+                assert.strictEqual(val.length, 2);
+                done();
+            }).catch(done);
         });
     });
 });
